@@ -1,0 +1,6 @@
+imports:
+    - { resource: 'zend-to-symfony/*.yaml' }
+
+services:
+    Rector\Rector\Class_\RenameClassRector:
+        Zend_Controller_Action: 'Symfony\Bundle\FrameworkBundle\Controller\AbstractController'
