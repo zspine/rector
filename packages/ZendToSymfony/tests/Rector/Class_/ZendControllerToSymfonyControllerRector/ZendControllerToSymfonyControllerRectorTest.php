@@ -2,6 +2,7 @@
 
 namespace Rector\ZendToSymfony\Tests\Rector\Class_\ZendControllerToSymfonyControllerRector;
 
+use Rector\ZendToSymfony\Rector\Class_\ZendControllerToSymfonyControllerRector;
 use Rector\Testing\PHPUnit\AbstractRectorTestCase;
 
 final class ZendControllerToSymfonyControllerRectorTest extends AbstractRectorTestCase
@@ -15,6 +16,6 @@ final class ZendControllerToSymfonyControllerRectorTest extends AbstractRectorTe
 
     protected function getRectorClass(): string
     {
-        return \Rector\ZendToSymfony\Rector\Class_\ZendControllerToSymfonyControllerRector::class;
+        return ZendControllerToSymfonyControllerRector::class;
     }
 }

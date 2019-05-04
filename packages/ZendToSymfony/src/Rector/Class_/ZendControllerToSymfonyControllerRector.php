@@ -2,6 +2,7 @@
 
 namespace Rector\ZendToSymfony\Rector\Class_;
 
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node;
 use Rector\Rector\AbstractRector;
 use Rector\RectorDefinition\CodeSample;
@@ -42,11 +43,11 @@ CODE_SAMPLE
      */
     public function getNodeTypes(): array
     {
-        return [\PhpParser\Node\Stmt\Class_::class];
+        return [Class_::class];
     }
 
     /**
-     * @param \PhpParser\Node\Stmt\Class_ $node
+     * @param Class_ $node
      */
     public function refactor(Node $node): ?Node
     {
