@@ -4,27 +4,23 @@ namespace Rector\CodingStyle\Imports;
 
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Use_;
-use Rector\Exception\ShouldNotHappenException;
-use Rector\PhpParser\Node\Resolver\NameResolver;
-use Rector\PhpParser\NodeTraverser\CallableNodeTraverser;
+use PhpParser\Node\Stmt\UseUse;
 
 final class AliasUsesResolver
 {
     /**
-     * @var NameResolver
+     * @var UseImportsTraverser
      */
-    private $nameResolver;
+    private $useImportsTraverser;
 
     /**
-     * @var CallableNodeTraverser
+     * @var string[]
      */
-    private $callableNodeTraverser;
+    private $aliasedUses = [];
 
-    public function __construct(NameResolver $nameResolver, CallableNodeTraverser $callableNodeTraverser)
+    public function __construct(UseImportsTraverser $useImportsTraverser)
     {
-        $this->nameResolver = $nameResolver;
-        $this->callableNodeTraverser = $callableNodeTraverser;
+        $this->useImportsTraverser = $useImportsTraverser;
     }
 
     /**
@@ -44,31 +40,16 @@ final class AliasUsesResolver
      */
     private function resolveForNamespace(Namespace_ $node): array
     {
-        $aliasedUses = [];
+        $this->aliasedUses = [];
 
-        $this->callableNodeTraverser->traverseNodesWithCallable($node->stmts, function (Node $node) {
-            if (! $node instanceof Use_) {
-                return null;
+        $this->useImportsTraverser->traverserStmts($node->stmts, function (UseUse $useUse, string $name): void {
+            if ($useUse->alias === null) {
+                return;
             }
 
-            // only import uses
-            if ($node->type !== Use_::TYPE_NORMAL) {
-                return null;
-            }
-
-            foreach ($node->uses as $useUse) {
-                $name = $this->nameResolver->resolve($useUse);
-                if ($name === null) {
-                    throw new ShouldNotHappenException();
-                }
-
-                if ($useUse->alias !== null) {
-                    // alias workaround
-                    $aliasedUses[] = $name;
-                }
-            }
+            $this->aliasedUses[] = $name;
         });
 
-        return $aliasedUses;
+        return $this->aliasedUses;
     }
 }

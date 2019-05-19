@@ -5,11 +5,9 @@ namespace Rector\CodingStyle\Imports;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\Node\Stmt\Use_;
-use Rector\Exception\ShouldNotHappenException;
+use PhpParser\Node\Stmt\UseUse;
 use Rector\PhpParser\Node\BetterNodeFinder;
 use Rector\PhpParser\Node\Resolver\NameResolver;
-use Rector\PhpParser\NodeTraverser\CallableNodeTraverser;
 
 final class UsedImportsResolver
 {
@@ -24,23 +22,23 @@ final class UsedImportsResolver
     private $nameResolver;
 
     /**
-     * @var CallableNodeTraverser
-     */
-    private $callableNodeTraverser;
-
-    /**
      * @var string[]
      */
     private $usedImports = [];
 
+    /**
+     * @var UseImportsTraverser
+     */
+    private $useImportsTraverser;
+
     public function __construct(
         BetterNodeFinder $betterNodeFinder,
         NameResolver $nameResolver,
-        CallableNodeTraverser $callableNodeTraverser
+        UseImportsTraverser $useImportsTraverser
     ) {
         $this->betterNodeFinder = $betterNodeFinder;
         $this->nameResolver = $nameResolver;
-        $this->callableNodeTraverser = $callableNodeTraverser;
+        $this->useImportsTraverser = $useImportsTraverser;
     }
 
     /**
@@ -74,24 +72,8 @@ final class UsedImportsResolver
             }
         }
 
-        $this->callableNodeTraverser->traverseNodesWithCallable($node->stmts, function (Node $node) {
-            if (! $node instanceof Use_) {
-                return null;
-            }
-
-            // only import uses
-            if ($node->type !== Use_::TYPE_NORMAL) {
-                return null;
-            }
-
-            foreach ($node->uses as $useUse) {
-                $name = $this->nameResolver->resolve($useUse);
-                if ($name === null) {
-                    throw new ShouldNotHappenException();
-                }
-
-                $this->usedImports[] = $name;
-            }
+        $this->useImportsTraverser->traverserStmts($node->stmts, function (UseUse $useUse, string $name): void {
+            $this->usedImports[] = $name;
         });
 
         return $this->usedImports;
