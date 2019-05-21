@@ -15,6 +15,7 @@ final class ImportFullyQualifiedNamesRectorTest extends AbstractRectorTestCase
             __DIR__ . '/Fixture/double_import_with_existing.php.inc',
             __DIR__ . '/Fixture/already_with_use.php.inc',
             __DIR__ . '/Fixture/already_class_name.php.inc',
+            __DIR__ . '/Fixture/no_class.php.inc',
 
             // keep
             __DIR__ . '/Fixture/keep.php.inc',
