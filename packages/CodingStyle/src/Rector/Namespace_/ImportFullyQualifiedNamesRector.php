@@ -178,6 +178,7 @@ CODE_SAMPLE
         }
 
         // the short name is already used, skip it
+        // @todo this is duplicated check of - $this->useAddingCommander->isShortImported?
         $shortName = $this->classNaming->getShortName($name->toString());
         if ($this->isShortNameAlreadyUsedForDifferentFqn($name, $shortName)) {
             return null;
