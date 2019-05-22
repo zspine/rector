@@ -6,6 +6,7 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\UseUse;
+use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\PhpParser\Node\BetterNodeFinder;
 use Rector\PhpParser\Node\Resolver\NameResolver;
 
@@ -46,8 +47,9 @@ final class UsedImportsResolver
      */
     public function resolveForNode(Node $node): array
     {
-        if ($node instanceof Namespace_) {
-            return $this->resolveForNamespace($node);
+        $namespace = $node->getAttribute(AttributeKey::NAMESPACE_NODE);
+        if ($namespace instanceof Namespace_) {
+            return $this->resolveForNamespace($namespace);
         }
 
         return [];
