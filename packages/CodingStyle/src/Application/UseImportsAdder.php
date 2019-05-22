@@ -44,7 +44,6 @@ final class UseImportsAdder
             // already imported in previous cycle
             $useUse = new UseUse(new Name($useImport));
             $newUses[] = new Use_([$useUse]);
-
 //            $this->importsInClassCollection->addImport($useImport);
         }
 
@@ -56,7 +55,6 @@ final class UseImportsAdder
             // already imported in previous cycle
             $useUse = new UseUse(new Name($functionUseImport), null, Use_::TYPE_FUNCTION);
             $newUses[] = new Use_([$useUse]);
-
 //            $this->importsInClassCollection->addImport($functionUseImport);
         }
 

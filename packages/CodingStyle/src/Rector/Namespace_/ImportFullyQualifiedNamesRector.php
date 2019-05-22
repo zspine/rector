@@ -127,6 +127,14 @@ CODE_SAMPLE
     public function refactor(Node $node): ?Node
     {
         if ($node instanceof Name) {
+            // part of namespace - we don't care
+            // @todo analyze spl file just once, not for every Name node
+
+            // cannot short
+            if ($node->getAttribute(AttributeKey::PARENT_NODE) instanceof Namespace_) {
+                return null;
+            }
+
             $this->resetCollectedNames();
 
             $this->resolveAlreadyImportedUses($node);
@@ -166,14 +174,15 @@ CODE_SAMPLE
      */
     private function importNamesAndCollectNewUseStatements(Name $name): ?Name
     {
-        $name = $name->getAttribute('originalName');
+        $originalName = $name->getAttribute('originalName');
 
-        if ($name instanceof Name) {
+        if ($originalName instanceof Name) {
             // already short
-            if (! Strings::contains($name->toString(), '\\')) {
+            if (! Strings::contains($originalName->toString(), '\\')) {
                 return null;
             }
         } else {
+            // not sure what to do
             return null;
         }
 
@@ -194,8 +203,6 @@ CODE_SAMPLE
             }
 
             $shortName = $this->classNaming->getShortName($fullyQualifiedName);
-
-            $this->useAddingCommander->addUseImport($name, $shortName);
 
             if ($this->useAddingCommander->isShortImported($name, $fullyQualifiedName)) {
                 if ($this->useAddingCommander->isImportShortable($name, $fullyQualifiedName)) {

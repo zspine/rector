@@ -42,8 +42,15 @@ final class UseAddingCommander implements CommanderInterface
 
     public function addUseImport(Node $node, string $useImport): void
     {
-        /** @var SmartFileInfo $fileInfo */
+        /** @var SmartFileInfo|null $fileInfo */
         $fileInfo = $node->getAttribute(AttributeKey::FILE_INFO);
+
+        if ($fileInfo === null) {
+            // @todo
+            return;
+        }
+
+
         $this->useImportsInFilePath[$fileInfo->getRealPath()][] = $useImport;
     }
 
@@ -148,9 +155,9 @@ final class UseAddingCommander implements CommanderInterface
         };
     }
 
-    private function getRealPathFromNode(Node $node): string
+    private function getRealPathFromNode(Node $node): ?string
     {
-        /** @var SmartFileInfo $fileInfo */
+        /** @var SmartFileInfo|null $fileInfo */
         $fileInfo = $node->getAttribute(AttributeKey::FILE_INFO);
 
         return $fileInfo->getRealPath();
