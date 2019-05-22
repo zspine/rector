@@ -9,8 +9,6 @@ final class ImportFullyQualifiedNamesRectorNonNamespacedTest extends AbstractRec
 {
     public function test(): void
     {
-        $this->markTestSkipped('Decouple services first');
-
         $this->doTestFiles([__DIR__ . '/Fixture/NonNamespaced/simple.php.inc']);
     }
 

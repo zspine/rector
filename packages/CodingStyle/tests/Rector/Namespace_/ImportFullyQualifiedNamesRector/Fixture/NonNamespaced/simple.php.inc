@@ -11,8 +11,7 @@ function importFromThisFunction() {
 use \Foo\Bar;
 
 function importFromThisFunction() {
-    $baz = Bar;
+    $baz = new Bar;
 }
 
 ?>
-
